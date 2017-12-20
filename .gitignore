@@ -103,3 +103,6 @@ ENV/
 # idea files 
 
 .idea
+
+# test files 
+src/tekst1.html

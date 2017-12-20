@@ -2,9 +2,9 @@ from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
 
-def openAndGetAsText():
+def openAndGetAsText(file):
     t = ""
-    with open("C:/Users/Kristjan/Desktop/tekst1.html", encoding="UTF-8") as tekst:
+    with open(file, encoding="UTF-8") as tekst:
         for i in tekst.readlines():
             t += str(i)
     return t
@@ -64,7 +64,7 @@ class MyHTMLParser(HTMLParser):
         print("Encountered some data  :", data)
 
 
-x = openAndGetAsText()
+x = openAndGetAsText("tekst1.html")
 m = MyHTMLParser()
 m.feed(str(cleanMe(x)))
 print(m.authorsAndText)
