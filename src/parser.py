@@ -35,40 +35,51 @@ class MyHTMLParser(HTMLParser):
     authorsAndText = []
 
     def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:", tag)
-        print("The attributes of this tag: ", attrs)
+
         if attrs == [('class', 'user')]:
             self.foundAuthor = True
-            print("KEK")
-        if tag == 'p':
-            self.foundText = True
             self.foundAuthorFindText = True
+            print("KEK")
+
+        if tag == 'p' and self.foundAuthorFindText:
+            self.foundText = True
             print("KEK 2")
 
     def handle_endtag(self, tag):
-        print("Encountered an end tag :", tag)
+
+        self.foundText = False
 
     def handle_data(self, data):
+
         if self.foundAuthor:
             self.authorsAndText.append([data])
             self.foundAuthor = False
             print("KEK 3")
+
         if self.foundText and self.foundAuthorFindText:
-            if not data:
-                self.authorsAndText[-1].append("")
-            else:
-                self.authorsAndText[-1].append(data)
-            self.foundText = False
-            self.foundAuthorFindText = False
+            print(data)
+            self.authorsAndText[-1].append(data)
             print("KEK 4")
+
         print("Encountered some data  :", data)
 
 
-
 x = openAndGetAsText()
-#print(cleanMe(x))
 m = MyHTMLParser()
 m.feed(str(cleanMe(x)))
 print(m.authorsAndText)
-# for i in range(len(x)):
-#     print(x[i])
+
+for i in m.authorsAndText:
+    if len(i) != 2:
+        m.authorsAndText.remove(i)
+
+
+# for i in range(len(m.authorsAndText) - 1):
+#     if len(m.authorsAndText[i]) >= 3:
+#         print(m.authorsAndText[i])
+#
+#
+# with open("Output.txt", "w", encoding="UTF-8") as text_file:
+#     for i in range(len(m.authorsAndText) - 1):
+#         print(f"{m.authorsAndText[i]} \n", file=text_file)
+
