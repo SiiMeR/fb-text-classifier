@@ -47,5 +47,3 @@ class MyTextClassifier():
         return predictedAuthor
 
 
-if __name__ == '__main__':
-    t = MyTextClassifier('Homies.html')
