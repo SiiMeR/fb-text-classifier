@@ -2,8 +2,6 @@ from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
 
-
-
 class MyHTMLParser(HTMLParser):
 
     foundAuthor = False
@@ -41,16 +39,15 @@ class MyHTMLParser(HTMLParser):
             script.extract()
         return soup
 
-    def fileToString(self, file):
+    def fileToString(self, fileName):
         t = ""
-        with open(file, encoding="UTF-8") as text:
+        with open(fileName, encoding="UTF-8") as text:
             for i in text.readlines():
                 t += str(i)
         return t
 
-
-    def parseChat(self, file):
-        fileString = self.fileToString(file)
+    def parseChat(self, fileName):
+        fileString = self.fileToString(fileName)
         self.feed(str(self.cleanHTML(fileString)))
 
         for i in self.authorsAndText:
@@ -61,6 +58,4 @@ class MyHTMLParser(HTMLParser):
 
 
 
-
-#print(m.authorsAndText)
 
