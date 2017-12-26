@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import KFold
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
 
 from src.parser import MyHTMLParser
 
@@ -25,29 +26,29 @@ class MyTextClassifier():
                  "mis", "mu", "mul", "mulle", "nad", "nii", "oled", "olen", "oli", "oma", "on", "pole", "sa", "seda",
                  "see", "selle", "siin", "siis", "ta", "te", "ära"]
 
-    count_vect = CountVectorizer(stop_words=stopwords)
-    tfidf_transformer = TfidfTransformer()
-    multinomialnb = None
-
+    text_clf = Pipeline([('vect', CountVectorizer(stop_words=stopwords)),
+                         ('tfidf', TfidfTransformer()),
+                         ('clf', SGDClassifier(loss='hinge', penalty='l2',
+                           alpha = 1e-3, random_state = 42, max_iter = 5, tol = None))])
+    model = None
     htmlParser = MyHTMLParser()
 
 
     def learnFromFile(self, file):
         authorsAndText = self.htmlParser.parseChat(file)
         data = pd.DataFrame(authorsAndText, columns=["author", "text"])
-        X_counts = self.count_vect.fit_transform(data.text.astype('U'))
-        X_tfidf = self.tfidf_transformer.fit_transform(X_counts)
-        self.multinomialnb = MultinomialNB().fit(X_tfidf, data.author)
+        self.text_clf = self.text_clf.fit(data.text.astype('U'), data.author)
 
     def predictAuthor(self, text):
-        X_test_counts = self.count_vect.transform(text)
-        X_test_tfidf = self.tfidf_transformer.transform(X_test_counts)
+  #      X_test_counts = self.count_vect.transform(text)
+  #      X_test_tfidf = self.tfidf_transformer.transform(X_test_counts)
 
-        predictedAuthor = self.multinomialnb.predict(X_test_tfidf)
+        predictedAuthor = self.text_clf.predict(text)
 
         return predictedAuthor
 
     # for doc, category in zip(test, predicted):
     #    print(category)
     #    print('%s => %s' % (doc, data.author))
+
 

@@ -2,8 +2,6 @@
 from src.classifier import MyTextClassifier
 
 
-
-
 print("Welcome to Facebook chat history classifier")
 
 fileName = input("Enter the filename of the facebook chat history \n")
