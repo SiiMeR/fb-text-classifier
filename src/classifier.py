@@ -8,13 +8,17 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import KFold
 from sklearn.naive_bayes import MultinomialNB
 
-testfile = [["Kristjan Puusepp","Ma oleks haige homo"],
+from src.parser import MyHTMLParser
+
+testfile = [["Kristjan Puusepp","Ma oleks haige"],
             ["Siim Raudsepp", "Helge päev täna"],
             ["Siim Raudsepp", "Kõik on sama täna"],
             ["Kristjan Puusepp", "Miski pole enam endine"]]
 
-data = pd.DataFrame(testfile, columns=["author","text"])
-#print(data)
+m = MyHTMLParser()
+data = pd.DataFrame(m.parseChat("tekst1.html"), columns=["author","text"])
+
+
 stopwords = ["aga", "ei", "et", "ja", "jah", "kas", "kui", "kõik", "ma", "me", "mida", "midagi", "mind", "minu",
              "mis", "mu", "mul", "mulle", "nad", "nii", "oled", "olen", "oli", "oma", "on", "pole", "sa", "seda",
              "see", "selle", "siin", "siis", "ta", "te", "ära"]
