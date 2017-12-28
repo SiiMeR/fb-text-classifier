@@ -1,1 +1,1 @@
-web: gunicorn -b 0.0.0.0:$PORT fb-text-classifier:app
+web: gunicorn -b 0.0.0.0:$PORT src/web/api:app

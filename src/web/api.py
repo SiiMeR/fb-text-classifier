@@ -3,7 +3,6 @@ from flask import Flask, request, redirect, url_for
 from src.classifier import MyTextClassifier
 from werkzeug.utils import secure_filename
 import os
-
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = APP_ROOT + "\\files"
 
