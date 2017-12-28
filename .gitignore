@@ -104,9 +104,6 @@ ENV/
 
 .idea
 
-# test files 
-src/tekst1.html
-src/web/tekst1.html
 
-src/web/files/*.html
-!src/web/files/filesfolder.txt
+# test files 
+*.html
