@@ -35,7 +35,7 @@ class MyHTMLParser(HTMLParser):
 
     def cleanHTML(self, html):
         soup = BeautifulSoup(html, "lxml")  # create a new bs4 object from the html data loaded
-        for script in soup(["style"]):  # remove all javascript and stylesheet code
+        for script in soup(["head"]):  # remove all javascript and stylesheet code
             script.extract()
         return soup
 
@@ -53,7 +53,7 @@ class MyHTMLParser(HTMLParser):
         for i in self.authorsAndText:
             if len(i) != 2:
                 self.authorsAndText.remove(i)
-
+        print(self.authorsAndText)
         return self.authorsAndText
 
 
