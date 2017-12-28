@@ -53,7 +53,6 @@ class MyHTMLParser(HTMLParser):
         for i in self.authorsAndText:
             if len(i) != 2:
                 self.authorsAndText.remove(i)
-        print(self.authorsAndText)
         return self.authorsAndText
 
 
