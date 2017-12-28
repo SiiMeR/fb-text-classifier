@@ -108,4 +108,5 @@ ENV/
 src/tekst1.html
 src/web/tekst1.html
 
-src/web/files/*
+src/web/files/*.html
+!src/web/files/filesfolder.txt
