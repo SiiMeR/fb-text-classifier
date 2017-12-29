@@ -119,8 +119,7 @@ def webhook():
 
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                         pass
-                    else:
-                        pass
+                
                 except KeyError:
                     return "oops", 200
 
