@@ -108,7 +108,7 @@ def webhook():
                         message_text = messaging_event["message"]["text"]  # the message's text
                         print("message text:" + message_text)
                         if clf:
-                            send_message(sender_id, clf.predictAuthor(message_text) + " is the author of that text.")
+                            send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
                         else:
                             noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
                             send_message(sender_id, noclassifier)
