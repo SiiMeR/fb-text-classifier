@@ -82,6 +82,8 @@ def webhook():
             for messaging_event in entry["messaging"]:
                 if messaging_event.get("read"):
                     pass
+                if messaging_event.get("delivery"):
+                    pass
                 else:
                     try:
                         if messaging_event.get("message"):  # someone sent us a message
