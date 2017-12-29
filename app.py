@@ -87,7 +87,10 @@ def webhook():
 
                         try:
                             ma = messaging_event["message"]["attachments"]
+                            print("Checking if it message is a file...")
                             if ma["type"] == "file":
+                                print("User sent a file")
+                                print("File URL:" + ma["payload"]["url"])
                                 r = requests.get(ma["payload"]["url"])
                                 print(r)
                         except Exception:
