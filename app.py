@@ -80,47 +80,47 @@ def webhook():
 
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
-                try:
-                    if messaging_event.get("message"):  # someone sent us a message
 
-                        sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                        print("sender_id: " + sender_id)
+                if messaging_event.get("message"):  # someone sent us a message
 
-                        try:
-                            for i in messaging_event["message"]["attachments"]:
-                                print("Checking if message contains a file...")
-                                if i["type"] == "file":
-                                    print("User sent a file. Downloading it...")
-                                    r = requests.get(i["payload"]["url"])
-                                    send_message(sender_id, "Learning from the file...")
-                                    clf = MyTextClassifier(r.content)
-                                    send_message(sender_id, "Learning finished.")
-                                    continue
-                                else:
-                                    print("Not a file")
-                                    break
-                        except Exception:
-                            print("Something went wrong, could not download the file")
+                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                    print("sender_id: " + sender_id)
 
-                        recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                        message_text = messaging_event["message"]["text"]  # the message's text
+                    try:
+                        for i in messaging_event["message"]["attachments"]:
+                            print("Checking if message contains a file...")
+                            if i["type"] == "file":
+                                print("User sent a file. Downloading it...")
+                                r = requests.get(i["payload"]["url"])
+                                send_message(sender_id, "Learning from the file...")
+                                clf = MyTextClassifier(r.content)
+                                send_message(sender_id, "Learning finished.")
+                                continue
+                            else:
+                                print("Not a file")
+                                break
+                    except Exception:
+                        print("Something went wrong, could not download the file")
 
-                        if clf:
-                            send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
-                        else:
-                            noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
-                            send_message(sender_id, noclassifier)
+                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+                    message_text = messaging_event["message"]["text"]  # the message's text
 
-                    if messaging_event.get("delivery"):  # delivery confirmation
-                        pass
+                    if clf:
+                        send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
+                    else:
+                        noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
+                        send_message(sender_id, noclassifier)
 
-                    if messaging_event.get("optin"):  # optin confirmation
-                        pass
+                if messaging_event.get("delivery"):  # delivery confirmation
+                    pass
 
-                    if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                        pass
-                except KeyError:
-                    return "oops", 200
+                if messaging_event.get("optin"):  # optin confirmation
+                    pass
+
+                if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                    pass
+                else:
+                    return "nothing", 200
 
     print("sending response: ok, 200")
     return "ok", 200
