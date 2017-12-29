@@ -1,6 +1,6 @@
 # CLI implementation of the bot : useful for testing
 from src.classifier import MyTextClassifier
-
+import requests
 
 print("Welcome to Facebook chat history classifier")
 

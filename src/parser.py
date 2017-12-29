@@ -46,8 +46,13 @@ class MyHTMLParser(HTMLParser):
                 t += str(i)
         return t
 
-    def parseChat(self, fileName):
-        fileString = self.fileToString(fileName)
+
+    def parseChat(self, fileName, fromString=False):
+        if fromString:
+            fileString = fileName
+        else:
+            fileString = self.fileToString(fileName)
+
         self.feed(str(self.cleanHTML(fileString)))
 
         for i in self.authorsAndText:

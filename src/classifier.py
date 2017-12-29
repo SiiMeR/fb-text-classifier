@@ -15,8 +15,12 @@ from src.parser import MyHTMLParser
 class MyTextClassifier():
 
     def __init__(self, file):
+        if isinstance(file,bytes): # was given file contents(bytes)
+            self.learn(file, True)
+        if isinstance(file,str): # was given a file name
+            self.learn(file)
 
-        self.learnFromFile(file)
+
 
     testfile = [["Kristjan Puusepp", "Ma oleks haige"],
                 ["Siim Raudsepp", "Helge päev täna"],
@@ -35,8 +39,9 @@ class MyTextClassifier():
     htmlParser = MyHTMLParser()
 
 
-    def learnFromFile(self, file):
-        authorsAndText = self.htmlParser.parseChat(file)
+    def learn(self, file,isString = False):
+
+        authorsAndText = self.htmlParser.parseChat(file, isString)
         data = pd.DataFrame(authorsAndText, columns=["author", "text"])
         self.text_clf = self.text_clf.fit(data.text.astype('U'), data.author)
 

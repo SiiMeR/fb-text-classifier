@@ -69,7 +69,7 @@ def verify():
 
 @app.route('/', methods=['POST'])
 def webhook():
-
+    global clf
     # endpoint for processing incoming messaging events
     print("Heroku received the JSON")
     data = request.get_json()
@@ -90,8 +90,9 @@ def webhook():
                                 print("Checking if it message is a file...")
                                 if i["type"] == "file":
                                     print("User sent a file")
+
                                     r = requests.get(i["payload"]["url"])
-                                    print(r.content)
+                                    clf = MyTextClassifier(r.content)
                                     continue
                                 else:
                                     print("Not a file")
@@ -106,7 +107,7 @@ def webhook():
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         message_text = messaging_event["message"]["text"]  # the message's text
                         print("message text:" + message_text)
-                        send_message(sender_id, "roger that!")
+                        send_message(sender_id, clf.predictAuthor(message_text) + " On öeldu autor")
 
                     if messaging_event.get("delivery"):  # delivery confirmation
                         pass
