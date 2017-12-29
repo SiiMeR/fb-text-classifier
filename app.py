@@ -85,6 +85,14 @@ def webhook():
                         sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                         print("sender_id: " + sender_id)
 
+                        try:
+                            ma = messaging_event["message"]["attachments"]
+                            if ma["type"] == "file":
+                                r = requests.get(ma["payload"]["url"])
+                                print(r)
+                        except Exception:
+                            print("Something went wrong, could not download the file")
+
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         message_text = messaging_event["message"]["text"]  # the message's text
                         print("message text:" + message_text)
