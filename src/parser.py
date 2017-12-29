@@ -30,7 +30,6 @@ class MyHTMLParser(HTMLParser):
         if self.foundText and self.foundAuthorFindText:
             self.authorsAndText[-1].append(data)
 
-
       #  print("Encountered some data  :", data) left in for debugging
 
     def cleanHTML(self, html):
@@ -45,7 +44,6 @@ class MyHTMLParser(HTMLParser):
             for i in text.readlines():
                 t += str(i)
         return t
-
 
     def parseChat(self, fileName, fromString=False):
         if fromString:

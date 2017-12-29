@@ -6,7 +6,7 @@ import os
 import json
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = APP_ROOT + "/src/web/files"
+UPLOAD_FOLDER = APP_ROOT + "/src/chats"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
