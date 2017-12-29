@@ -23,6 +23,12 @@ def findauthor(text):
     return clf.predictAuthor([text])[0]
 
 
+def filedl(url):
+    r = requests.get(url)
+    print(r.content)
+    return r
+
+
 @app.route('/upload/', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
@@ -65,8 +71,9 @@ def verify():
 def webhook():
 
     # endpoint for processing incoming messaging events
-    print("Heroku sai sõnumi kätte")
+    print("Heroku received the JSON")
     data = request.get_json()
+    print("The JSON data:")
     print(data)
     if data["object"] == "page":
 
@@ -77,9 +84,10 @@ def webhook():
 
                         sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                         print("sender_id: " + sender_id)
+
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         message_text = messaging_event["message"]["text"]  # the message's text
-
+                        print("message text:" + message_text)
                         send_message(sender_id, "roger that!")
 
                     if messaging_event.get("delivery"):  # delivery confirmation
@@ -93,7 +101,7 @@ def webhook():
                 except KeyError:
                     return "oops", 200
 
-    print("saadame response: ok, 200")
+    print("sending response: ok, 200")
     return "ok", 200
 
 
