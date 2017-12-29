@@ -72,24 +72,27 @@ def webhook():
 
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
+                try:
+                    if messaging_event.get("message"):  # someone sent us a message
 
-                if messaging_event.get("message"):  # someone sent us a message
+                        sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                        print("sender_id: " + sender_id)
+                        recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+                        message_text = messaging_event["message"]["text"]  # the message's text
 
-                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    print("sender_id: " + sender_id)
-                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["text"]  # the message's text
+                        send_message(sender_id, "roger that!")
 
-                    send_message(sender_id, "roger that!")
+                    if messaging_event.get("delivery"):  # delivery confirmation
+                        pass
 
-                if messaging_event.get("delivery"):  # delivery confirmation
-                    pass
+                    if messaging_event.get("optin"):  # optin confirmation
+                        pass
 
-                if messaging_event.get("optin"):  # optin confirmation
-                    pass
+                    if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                        pass
+                except KeyError:
+                    return "oops", 200
 
-                if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    pass
     print("saadame response: ok, 200")
     return "ok", 200
 
