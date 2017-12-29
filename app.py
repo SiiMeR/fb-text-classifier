@@ -65,7 +65,7 @@ def verify():
 def webhook():
 
     # endpoint for processing incoming messaging events
-
+    print("Heroku sai sõnumi kätte")
     data = request.get_json()
     print(data)
     if data["object"] == "page":
@@ -76,6 +76,7 @@ def webhook():
                 if messaging_event.get("message"):  # someone sent us a message
 
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                    print("sender_id: " + sender_id)
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
@@ -89,7 +90,7 @@ def webhook():
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     pass
-
+    print("saadame response: ok, 200")
     return "ok", 200
 
 
