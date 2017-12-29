@@ -4,6 +4,7 @@ from src.classifier import MyTextClassifier
 from werkzeug.utils import secure_filename
 import os
 import json
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = APP_ROOT + "/src/web/files"
 
@@ -23,12 +24,12 @@ def findauthor(text):
     return clf.predictAuthor([text])[0]
 
 
-def filedl(url):
-    r = requests.get(url)
-    print(r.content)
-    return r
-
-
+# When using Postman:
+# POST to https://fb-text-classifier.herokuapp.com/upload/
+# Body: form-data
+# Key - value:
+#   size (Text) - original
+#   file (File) - "Choose Files"
 @app.route('/upload/', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
@@ -87,26 +88,21 @@ def webhook():
 
                         try:
                             for i in messaging_event["message"]["attachments"]:
-                                print("Checking if it message is a file...")
+                                print("Checking if message contains a file...")
                                 if i["type"] == "file":
-                                    print("User sent a file")
-
+                                    print("User sent a file. Downloading it...")
                                     r = requests.get(i["payload"]["url"])
                                     clf = MyTextClassifier(r.content)
                                     continue
                                 else:
                                     print("Not a file")
                                     break
-
-
-
-
                         except Exception:
                             print("Something went wrong, could not download the file")
 
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         message_text = messaging_event["message"]["text"]  # the message's text
-                        print("message text:" + message_text)
+
                         if clf:
                             send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
                         else:
