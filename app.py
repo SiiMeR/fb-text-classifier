@@ -48,7 +48,6 @@ def upload_file():
     return "Done"
 
 
-
 # https://github.com/hartleybrody/fb-messenger-bot
 @app.route('/', methods=['GET'])
 def verify():
@@ -59,7 +58,7 @@ def verify():
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
 
-    return "Hello world", 200
+    return "<h1>Hello, this is fb-text-classifier.</h1>\n<p>Made by Siim Raudsepp and Kristjan Puusepp</p>", 200
 
 
 @app.route('/', methods=['POST'])
@@ -115,6 +114,7 @@ def send_message(recipient_id, message_text):
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         print(r.status_code)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
