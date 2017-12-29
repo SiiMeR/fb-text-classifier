@@ -107,7 +107,11 @@ def webhook():
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         message_text = messaging_event["message"]["text"]  # the message's text
                         print("message text:" + message_text)
-                        send_message(sender_id, clf.predictAuthor(message_text) + " On öeldu autor")
+                        if clf:
+                            send_message(sender_id, clf.predictAuthor(message_text) + " is the author of that text.")
+                        else:
+                            noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
+                            send_message(sender_id, noclassifier)
 
                     if messaging_event.get("delivery"):  # delivery confirmation
                         pass
