@@ -30,9 +30,11 @@ class MyTextClassifier:
     htmlParser = MyHTMLParser()
 
     def learn(self, file, isString = False):
+        print("Learning from the file...")
         authorsAndText = self.htmlParser.parseChat(file, isString)
         data = pd.DataFrame(authorsAndText, columns=["author", "text"])
         self.text_clf = self.text_clf.fit(data.text.astype('U'), data.author)
+        print("Learning is finished.")
 
     def predictAuthor(self, text):
         predictedAuthor = self.text_clf.predict(text)

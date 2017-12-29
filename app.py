@@ -92,7 +92,9 @@ def webhook():
                                 if i["type"] == "file":
                                     print("User sent a file. Downloading it...")
                                     r = requests.get(i["payload"]["url"])
+                                    send_message(sender_id, "Learning from the file...")
                                     clf = MyTextClassifier(r.content)
+                                    send_message(sender_id, "Learning finished.")
                                     continue
                                 else:
                                     print("Not a file")
