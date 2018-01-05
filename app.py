@@ -99,6 +99,8 @@ def webhook():
                                         r = requests.get(i["payload"]["url"])
                                         send_message(sender_id, "Learning from the file...")
                                         clfdict[sender_id] = MyTextClassifier(r.content)
+
+                                        print("saved to dictionary at [" + sender_id + "]")
                                         send_message(sender_id, "Learning finished.")
                                         continue
                                     else:
@@ -110,8 +112,13 @@ def webhook():
                             recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                             message_text = messaging_event["message"]["text"]  # the message's text
 
-                            if clfdict[sender_id]:
-                                send_message(sender_id, clfdict[sender_id].predictAuthor([message_text])[0] + " is the author of that text.")
+                            clf = None
+                            try:
+                                clf = clfdict[sender_id]
+                            except Exception:
+                                print("cannot get your classifier " + sender_id)
+                            if clf:
+                                send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
                             else:
                                 noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
                                 send_message(sender_id, noclassifier)
