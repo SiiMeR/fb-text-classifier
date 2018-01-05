@@ -82,7 +82,7 @@ def webhook():
         for entry in data["entry"]:
             print(int(time.time()))
             print(int(((str(entry["time"]))[:-3])))
-            if int(time.time()) >= int(((str(entry["time"]))[:-3])):
+            if int(time.time()) <= int(((str(entry["time"]))[:-3])) + 10:
                 for messaging_event in entry["messaging"]:
                     # if messaging_event.get("read"):
                     #     print("passing")
