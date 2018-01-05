@@ -93,6 +93,7 @@ def webhook():
 
                         if type_of_message == "attachments":
                             for i in messaging_event["message"]["attachments"]:
+                                print(i["payload"]["url"])
                                 r = requests.get(i["payload"]["url"])
                                 send_message(sender_id, "Learning from the file...")
                                 clf = MyTextClassifier(r.content)
