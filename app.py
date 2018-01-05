@@ -10,7 +10,9 @@ UPLOAD_FOLDER = APP_ROOT + "/src/chats"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-clf = None
+#clf = None
+
+clfdict = {}
 
 
 @app.route('/hi/<name>')
@@ -70,7 +72,7 @@ def verify():
 
 @app.route('/', methods=['POST'])
 def webhook():
-    global clf
+    global clfdict
     # endpoint for processing incoming messaging events
     print("Heroku received the JSON")
     data = request.get_json()
@@ -96,7 +98,7 @@ def webhook():
                                         print("User sent a file. Downloading it...")
                                         r = requests.get(i["payload"]["url"])
                                         send_message(sender_id, "Learning from the file...")
-                                        clf = MyTextClassifier(r.content)
+                                        clfdict[sender_id] = MyTextClassifier(r.content)
                                         send_message(sender_id, "Learning finished.")
                                         continue
                                     else:
@@ -108,8 +110,8 @@ def webhook():
                             recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                             message_text = messaging_event["message"]["text"]  # the message's text
 
-                            if clf:
-                                send_message(sender_id, clf.predictAuthor([message_text])[0] + " is the author of that text.")
+                            if clfdict[sender_id]:
+                                send_message(sender_id, clfdict[sender_id].predictAuthor([message_text])[0] + " is the author of that text.")
                             else:
                                 noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
                                 send_message(sender_id, noclassifier)
