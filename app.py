@@ -76,7 +76,8 @@ def webhook():
     # endpoint for processing incoming messaging events
     print("Heroku received the JSON")
     data = request.get_json()
-    print("The JSON data: \n" + data)
+    print("The JSON data:")
+    print(data)
     if data["object"] == "page":
 
         for entry in data["entry"]:
