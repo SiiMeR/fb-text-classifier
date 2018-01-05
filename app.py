@@ -88,7 +88,7 @@ def webhook():
                 #     pass
                 if messaging_event.get("message"):
                     sender_id = messaging_event["sender"]["id"]
-                    message_text = messaging_event["message"]["text"]
+
                     for type_of_message in messaging_event["message"]:
 
                         if type_of_message == "attachments":
@@ -97,11 +97,11 @@ def webhook():
                                 send_message(sender_id, "Learning from the file...")
                                 clf = MyTextClassifier(r.content)
                                 send_message(sender_id, "Learning finished.")
-                                break
+                                continue
                         if type_of_message == "text":
-                            if clf and message_text.split()[0] == "!ennusta":
+                            if clf and messaging_event["message"]["text"].split()[0] == "!ennusta":
                                 send_message(sender_id,
-                                             clf.predictAuthor([message_text][9:])[0] + " is the author of that text.")
+                                             clf.predictAuthor([messaging_event["message"]["text"]][9:])[0] + " is the author of that text.")
                             if not clf:
                                 noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
                                 send_message(sender_id, noclassifier)
