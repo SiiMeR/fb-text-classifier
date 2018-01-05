@@ -74,9 +74,7 @@ def verify():
 def webhook():
     global clfdict
     # endpoint for processing incoming messaging events
-    print("Heroku received the JSON")
     data = request.get_json()
-    print("The JSON data:")
     print(data)
     if data["object"] == "page":
 
@@ -97,7 +95,10 @@ def webhook():
                                     if i["type"] == "file":
                                         print("User sent a file. Downloading it...")
                                         r = requests.get(i["payload"]["url"])
+                                        send_message(sender_id, "Clearing old classifier...")
+                                        clfdict[sender_id] = None
                                         send_message(sender_id, "Learning from the file...")
+
                                         clfdict[sender_id] = MyTextClassifier(r.content)
 
                                         print("saved to dictionary at [" + sender_id + "]")
@@ -115,6 +116,7 @@ def webhook():
                             clf = None
                             try:
                                 clf = clfdict[sender_id]
+                                print("Got classifier with id " + sender_id)
                             except Exception:
                                 print("cannot get your classifier " + sender_id)
                             if clf:
