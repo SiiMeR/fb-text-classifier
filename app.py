@@ -103,7 +103,7 @@ def webhook():
 
                                         print("saved to dictionary at [" + sender_id + "]")
                                         send_message(sender_id, "Learning finished.")
-                                        continue
+                                        break
                                     else:
                                         print("Not a file")
                                         break
