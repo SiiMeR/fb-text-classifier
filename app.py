@@ -97,7 +97,7 @@ def webhook():
                                 send_message(sender_id, "Learning from the file...")
                                 clf = MyTextClassifier(r.content)
                                 send_message(sender_id, "Learning finished.")
-                                continue
+                                break
                         if type_of_message == "text":
                             if clf and message_text.split()[0] == "!ennusta":
                                 send_message(sender_id,
