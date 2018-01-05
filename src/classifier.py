@@ -33,6 +33,8 @@ class MyTextClassifier:
         print("Learning from the file...")
         authorsAndText = self.htmlParser.parseChat(file, isString)
         data = pd.DataFrame(authorsAndText, columns=["author", "text"])
+
+        print("Selles failis on autorid " + data.author + "classifier on misasi + " + (self.text_clf is not None))
         self.text_clf = self.text_clf.fit(data.text.astype('U'), data.author)
         print("Learning is finished.")
 

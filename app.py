@@ -97,6 +97,7 @@ def webhook():
                                         r = requests.get(i["payload"]["url"])
                                         send_message(sender_id, "Clearing old classifier...")
                                         clfdict[sender_id] = None
+                                        dumpclean(clfdict)
                                         send_message(sender_id, "Learning from the file...")
 
                                         clfdict[sender_id] = MyTextClassifier(r.content)
@@ -139,6 +140,24 @@ def webhook():
 
     print("sending response: ok, 200")
     return "ok", 200
+
+
+def dumpclean(obj):
+    if type(obj) == dict:
+        for k, v in obj.items():
+            if hasattr(v, '__iter__'):
+                print(k)
+                dumpclean(v)
+            else:
+                print('%s : %s' % (k, v))
+    elif type(obj) == list:
+        for v in obj:
+            if hasattr(v, '__iter__'):
+                dumpclean(v)
+            else:
+                print(v)
+    else:
+        print(obj)
 
 
 def send_message(recipient_id, message_text):
