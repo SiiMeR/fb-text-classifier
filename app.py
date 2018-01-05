@@ -4,6 +4,7 @@ from src.classifier import MyTextClassifier
 from werkzeug.utils import secure_filename
 import os
 import json
+import time
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = APP_ROOT + "/src/chats"
@@ -79,35 +80,40 @@ def webhook():
     if data["object"] == "page":
 
         for entry in data["entry"]:
-            for messaging_event in entry["messaging"]:
-                # if messaging_event.get("read"):
-                #     print("passing")
-                #     pass
-                # if messaging_event.get("delivery"):
-                #     print("passing")
-                #     pass
-                if messaging_event.get("message"):
-                    sender_id = messaging_event["sender"]["id"]
+            if int(time.time()) > int(entry["type"][:-3]):
+                for messaging_event in entry["messaging"]:
+                    # if messaging_event.get("read"):
+                    #     print("passing")
+                    #     pass
+                    # if messaging_event.get("delivery"):
+                    #     print("passing")
+                    #     pass
+                    if messaging_event.get("message"):
+                        sender_id = messaging_event["sender"]["id"]
 
-                    for type_of_message in messaging_event["message"]:
+                        for type_of_message in messaging_event["message"]:
 
-                        if type_of_message == "attachments":
-                            for i in messaging_event["message"]["attachments"]:
-                                print(i["payload"]["url"])
-                                r = requests.get(i["payload"]["url"])
-                                send_message(sender_id, "Learning from the file...")
-                                clf = MyTextClassifier(r.content)
-                                send_message(sender_id, "Learning finished.")
-                                continue
-                        if type_of_message == "text":
-                            if clf and messaging_event["message"]["text"].split()[0] == "!ennusta":
-                                send_message(sender_id,
-                                             clf.predictAuthor([messaging_event["message"]["text"]][9:])[0] + " is the author of that text.")
-                            if not clf:
-                                noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
-                                send_message(sender_id, noclassifier)
-                            else:
-                                send_message(sender_id, "If you wish I made a prediction, write !ennusta 'your text here'")
+                            if type_of_message == "attachments":
+                                for i in messaging_event["message"]["attachments"]:
+                                    print(i["payload"]["url"])
+                                    r = requests.get(i["payload"]["url"])
+                                    send_message(sender_id, "Learning from the file...")
+                                    clf = MyTextClassifier(r.content)
+                                    send_message(sender_id, "Learning finished.")
+                                    continue
+                            if type_of_message == "text":
+                                if clf:
+                                    if messaging_event["message"]["text"].split()[0] == "!ennusta":
+                                        send_message(sender_id, clf.predictAuthor([messaging_event["message"]["text"]][9:])[0] + " is the author of that text.")
+                                    else:
+                                        send_message(sender_id,
+                                                     "If you wish I made a prediction, write !ennusta 'your text here'")
+                                #if not clf:
+                                else:
+                                    noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
+                                    send_message(sender_id, noclassifier)
+                                #else:
+                                  #  send_message(sender_id, "If you wish I made a prediction, write !ennusta 'your text here'")
 
                 else:
                     pass
