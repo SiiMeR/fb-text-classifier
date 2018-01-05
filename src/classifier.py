@@ -13,6 +13,9 @@ class MyTextClassifier:
         if isinstance(file, str):  # was given a file name
             self.learn(file)
 
+    def __del__(self):
+        print("Kustutan selle instantsi classifierist ära")
+        
     testfile = [["Kristjan Puusepp", "Ma oleks haige"],
                 ["Siim Raudsepp", "Helge päev täna"],
                 ["Siim Raudsepp", "Kõik on sama täna"],
@@ -34,7 +37,8 @@ class MyTextClassifier:
         authorsAndText = self.htmlParser.parseChat(file, isString)
         data = pd.DataFrame(authorsAndText, columns=["author", "text"])
 
-        print("Selles failis on autorid " + data.author + "classifier on misasi + " + (self.text_clf is not None))
+        print(authorsAndText[0] + [" Väike sample htmlist"])
+        print("classifier on olemas : + " + str(self.text_clf is not None))
         self.text_clf = self.text_clf.fit(data.text.astype('U'), data.author)
         print("Learning is finished.")
 
