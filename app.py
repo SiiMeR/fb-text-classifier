@@ -88,25 +88,26 @@ def webhook():
                 #     pass
                 if messaging_event.get("message"):
                     sender_id = messaging_event["sender"]["id"]
-
+                    message_text = messaging_event["message"]["text"]
                     for type_of_message in messaging_event["message"]:
 
                         if type_of_message == "attachments":
-                            r = requests.get(i["payload"]["url"])
-                            send_message(sender_id, "Learning from the file...")
-                            clf = MyTextClassifier(r.content)
-                            send_message(sender_id, "Learning finished.")
-
+                            for i in messaging_event["message"]["attachments"]:
+                                r = requests.get(i["payload"]["url"])
+                                send_message(sender_id, "Learning from the file...")
+                                clf = MyTextClassifier(r.content)
+                                send_message(sender_id, "Learning finished.")
+                                continue
                         if type_of_message == "text":
-                            if clf and messaging_event["message"]["text"].split()[0] == "!ennusta":
+                            if clf and message_text.split()[0] == "!ennusta":
                                 send_message(sender_id,
-                                             clf.predictAuthor([message_text])[0] + " is the author of that text.")
+                                             clf.predictAuthor([message_text][9:])[0] + " is the author of that text.")
                             if not clf:
                                 noclassifier = "You have not uploaded your chat history yet. Please rename the .html file to .txt and attach it to this chat."
                                 send_message(sender_id, noclassifier)
                             else:
-                                send_message(sender_id, "If you with I made a prediction, write !ennusta 'your text here'")
-                            
+                                send_message(sender_id, "If you wish I made a prediction, write !ennusta 'your text here'")
+
                 else:
                     pass
                 # else:
